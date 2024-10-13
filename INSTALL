@@ -1,0 +1,47 @@
+To build sysmond (pronounced sys-mon-d), just run make.
+On most systemd the build time will be less than one second.
+
+If desired, copy the executable, sysmond, to the desired location
+such as /usr/sbin.
+
+To start the program just run:
+  sudo sysmond [ options ]
+
+Command line options and defaults can be seen by passing
+--help on the command line.
+
+To terminate the program run:
+  sudo kill $(cat /run/sysmond.pid)
+
+See the ABOUT file for program details.
+
+There are three associated files that are used.
+
+/etc/sysmond.conf:
+========
+# Ignore lines starting with a hash or blank lines.
+
+#pid-file   /run/sysmond.pid
+#debug-file /tmp/sysmond.dbg
+#udp-port   12686
+#scan-time  1
+========
+
+This file is optional, but if not found a warning will be
+written to the terminal.  The warning can be silenced
+with a sumple "sudo touch /etc/sysmond.conf".
+
+------------
+/run/sysmond.pid
+
+This file contains the program ID (pid) of the running process.
+
+-----------
+/tmp/sysmond.dbg
+
+This file is created if an error occurs or a signal is sent
+to the program:
+  sudo kill -SIGUSR1 $(cat /run/sysmond.pid)
+
+This command will dump the current readings of the program
+status and tempeerature sensors.

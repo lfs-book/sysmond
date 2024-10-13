@@ -1,0 +1,78 @@
+sysmond is a daemon program that periodically (by default once a second)
+reads system status.  It listens to a UDP port (default 12686) and
+when it receaves a message, returns it's current readings.
+
+The program is written in C to minimize execution time and size.
+Since the program runs periodically (once a second by default), it
+only takes about 2 milliseconds on one core for each cycle. It's 
+only dependency is glibc.
+
+One purpose of the program is to demonstrate some moderately advanced
+techniques in a Linux envronment.  It demonstrates the following:
+
+- Parsing command line options
+- Parsing a configuration file
+- Reading from the /proc file system
+- Reading from the /sys file system
+- Using UDP to receive requests and to reply to the sender
+- Using the fork command
+- Creating a thread 
+- Handling signals
+
+When the Linux kernel runs, it frequently updates files in the /proc
+and /sys virtual file systems.  For the purpose of this program we
+read:
+/proc/loadavg
+/proc/uptime
+/proc/stat
+/proc/meminfo
+/sys/class/hwmon/hwmon<number>
+  name  (interface name)
+  temp<number>_label (sensor name)
+  temp<number>_input (sensor value)
+
+The program starts by parsing the command line and configuration file.
+It then sets itself up as a daemon by 
+
+1. Changing to the / directory
+2. Checking to see if it is already running
+   - Terminate if it is
+3. Fork the process
+   - The original process:
+     - Gets the pid of the forked process and writes it to /run/sysmond.pid
+     - Terminates successfully
+   - The forked process:
+     - Closes stdin, stdout, and stderro
+     - Sets up signal handlers
+     - Creates a separate thread to handle udp input and output
+     - Runs an infinite loop reading system data and sleeping
+       between scans
+
+The scanning process alternates writing it's output to two different
+locations, active and inactive. It writes to the inactive string and
+then makes it active.
+
+The udp process, in a separate thread, waits for udp input (but ignores the
+content) and then immediatey responds by sending the active string to the
+sender.  The length of the output depends on the number of temperature sensing
+devices and the number of sensors on each device. Typically the length is in the 
+range of 500 to 600 bytes.
+
+The format of the output is as follows:
+
+<hostname>;time:<time string>;uptime:<in seconds>;load:<three values>;cpu%:<value>;mem%:<value>
+
+For each sensor device:
+interface;<device name>,<sensor name>:<value>,[<sensor name>:<value>...]
+
+These values are used by the client, sysmon3, for display.
+
+Note:  
+  The temperature values in /sys/class/hwmon are written by kernel drivers.
+  These may be built into the kernel or as modules, but must be selected
+  when configuring the kernel. To help decide which drivers are needed for
+  a specific system, the lm-sensors package has a program, sensors-detect, 
+  that can be used. This program is a Perl script that walks through the 
+  process of scanning a system for various hardware monitoring chips (sensors).
+
+
