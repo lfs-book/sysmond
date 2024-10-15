@@ -23,9 +23,6 @@ void* udp_thread( void* )
    serv_addr.sin_addr.s_addr = INADDR_ANY;
    serv_addr.sin_port        = htons( sysmond_args.udpPort );
 
-   // Client data
-   memset( (char*)& client_addr, 0, sizeof(client_addr) );
-
    // Create a UDP socket
    if ( ( udp_socket = socket( AF_INET, SOCK_DGRAM, 0) ) < 0 ) 
    {
@@ -45,6 +42,9 @@ void* udp_thread( void* )
       // Wait for input to socket
       memset( (char*) data_in, 0, BUFFER_SIZE_IN );
 
+      // Client data
+      memset( (char*)& client_addr, 0, sizeof(client_addr) );
+
       int n =
       recvfrom( udp_socket, 
                 data_in, 
@@ -62,10 +62,15 @@ void* udp_thread( void* )
       }
       
       // Debug
-      char t[ BUFFER_SIZE_IN ];
-      memset( (char*) t, 0, BUFFER_SIZE_IN );
-      sprintf( t, " - data out size %d\n", strlen(data[ data_available ]) );
-//      dbg( t );
+      //char t[ BUFFER_SIZE_IN ];
+      //memset( (char*) t, 0, BUFFER_SIZE_IN );
+      //sprintf( t, " - data out size %d\n", strlen(data[ data_available ]) );
+      //dbg( t );
+
+      //char* a = inet_ntoa( client_addr.sin_addr );
+      //int   p = ntohs( client_addr.sin_port );
+      //sprintf( t, "- got request from: %s:%d\n", a, p );
+      //dbg( t );
 
       // This is where we get the data from the system
       // The data[ 2 ] string array uses data_available to 
@@ -75,7 +80,7 @@ void* udp_thread( void* )
       pthread_mutex_lock( &mutex );
       memcpy( data_out, data[ data_available ], strlen( data[ data_available ] ) );
       pthread_mutex_unlock( &mutex );
-//Can there be a race condition here?      
+
       int end = strlen( data_out );;
       data_out[ end ] = '\0';
 
@@ -89,8 +94,8 @@ void* udp_thread( void* )
               socket_len
             ); 
 
-      sprintf( t, "- data sent %d\n", sent);
-//      dbg( t );
+      //sprintf( t, "- data sent %d\n", sent);
+      //dbg( t );
    }
 
    // Never exits
