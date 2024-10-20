@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 #include <stdio.h>   // perror, snprintf, fopen, FILE, fgets, fwrite, fclose
 #include <time.h>    // time_t, time(), ctime, gmtime, struct tm
 #include <unistd.h>  // getuid, optind
@@ -6,7 +8,7 @@
 #include <dirent.h>  // DIR, struct dirent, opendir, readdir
 #include <libgen.h>  // basename
 #include <stdbool.h> // true
-#include <pthread.h> // pthread_create
+#include <pthread.h> // pthread_create, pthread_setaffinity_np, CPU_ZERO, CPU_SET
 
 #include "sysmond.h"
 
@@ -75,6 +77,18 @@ int is_running( char* name)
     closedir( dir );
     return running;
 }
+
+void set_affinity( int cpu )
+{
+   cpu_set_t  mask;
+
+   CPU_ZERO( &mask );
+   CPU_SET( cpu, &mask );
+   pthread_setaffinity_np( 0, sizeof(mask), &mask );
+   // Ignore result
+}
+
+
 
 // Write txt to debug file
 void dbg( char* txt )

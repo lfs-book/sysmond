@@ -22,9 +22,10 @@ extern void  install_sighandler( void );        // signal.c
 extern void  signalHandler     ( int );         // signal.c
 extern void  get_data          ( char* );       // data.c
 extern void  get_temps         ( char* );       // temps.c
+extern void  set_affinity      ( int );         // sysmond.c
 
 // Local functions
-void        dbg       ( char* );
-int         is_running( char* name);
-void        print_time( void );
+void         dbg               ( char* );
+int          is_running        ( char* );
+void         print_time        ( void );
 

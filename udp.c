@@ -1,3 +1,4 @@
+#include <unistd.h>  // nice
 #include "udp.h"
 
 #define BUFFER_SIZE_IN  1024
@@ -16,6 +17,12 @@ void* udp_thread( void* )
    struct sockaddr_in serv_addr;
    struct sockaddr_in client_addr;
    socklen_t          socket_len = sizeof( struct sockaddr_in );
+
+   // Raise the priority
+   nice( -1 );
+
+   // Run on CPU 0 only
+   set_affinity( 0 );
 
    // Server data
    memset( (char*)& serv_addr, 0, sizeof(serv_addr) );
