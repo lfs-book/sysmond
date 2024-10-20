@@ -18,6 +18,9 @@ techniques in a Linux envronment.  It demonstrates the following:
 - Using the fork command
 - Creating a thread 
 - Handling signals
+- Raising process priority
+- Attaching a process affinity to a CPU core
+- Using a mutex (mutual exclusion token)
 
 When the Linux kernel runs, it frequently updates files in the /proc
 and /sys virtual file systems.  For the purpose of this program we

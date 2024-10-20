@@ -25,7 +25,5 @@ extern void  get_temps         ( char* );       // temps.c
 extern void  set_affinity      ( int );         // sysmond.c
 
 // Local functions
-void         dbg               ( char* );
 int          is_running        ( char* );
-void         print_time        ( void );
 

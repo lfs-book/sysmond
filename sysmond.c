@@ -1,7 +1,6 @@
 #define _GNU_SOURCE
 
 #include <stdio.h>   // perror, snprintf, fopen, FILE, fgets, fwrite, fclose
-#include <time.h>    // time_t, time(), ctime, gmtime, struct tm
 #include <unistd.h>  // getuid, optind
 #include <string.h>  // strtok, strcmp, strlen
 #include <stdlib.h>  // strtol, exit, EXIT_FAILURE
@@ -12,23 +11,12 @@
 
 #include "sysmond.h"
 
-//#include <sys/time.h>
-
+// Globals
 int             data_available = 0;
 char            data[ 2 ][ 1024 ];
-const           char* version = "3.0.0";
-char*           time_string;
 pthread_mutex_t mutex;
 
 // Start functions
-
-// Populate time_string with formatted time without newline
-void print_time()
-{
-   const time_t now         = time( NULL );
-                time_string = ctime( &now );
-   time_string[ 24 ]        = 0;             // Remove newline
-}
 
 // Determine if 'name' is already running
 int is_running( char* name)
@@ -48,12 +36,12 @@ int is_running( char* name)
 
     while( (ent = readdir(dir)) != NULL )
     {   
-        /* If endptr is not a null character, the directory is not
-         * entirely numeric, so ignore it */
+        // If endptr is not a null character, the directory is not
+        // entirely numeric, so ignore it 
         long lpid = strtol( ent->d_name, &endptr, 10 );
         if (*endptr != '\0') continue;
         
-        /* Try to open the cmdline file */
+        // Try to open the cmdline file
         snprintf( buf, sizeof(buf), "/proc/%ld/cmdline", lpid );
         FILE* fp = fopen( buf, "r" );
         
@@ -63,9 +51,9 @@ int is_running( char* name)
             {   
                 char* first = basename( strtok( buf, " " ) );
 
-                /* Check the first token in the file, the program name.
-                 * We should always match this instance, but if another 
-                 * is running, we will get more than 1.*/
+                // Check the first token in the file, the program name.
+                // We should always match this instance, but if another 
+                // is running, we will get more than 1.
                 
                 if ( ! strcmp( first, base) ) running++;
             }
@@ -76,42 +64,6 @@ int is_running( char* name)
 
     closedir( dir );
     return running;
-}
-
-void set_affinity( int cpu )
-{
-   cpu_set_t  mask;
-
-   CPU_ZERO( &mask );
-   CPU_SET( cpu, &mask );
-   pthread_setaffinity_np( 0, sizeof(mask), &mask );
-   // Ignore result
-}
-
-
-
-// Write txt to debug file
-void dbg( char* txt )
-{
-   FILE* file;
-
-   file = fopen( sysmond_args.dbgFile, "a" );
-   if ( file != NULL )
-   {
-      print_time();
-      strcat( time_string, " " );
-      fwrite( time_string, 
-              strlen( time_string ),
-              1,
-              file );
-
-      fwrite( txt, 
-              strlen( txt ),
-              1,
-              file );
-      
-      fclose( file );
-   }
 }
 
 int main( int argc, char* argv[])

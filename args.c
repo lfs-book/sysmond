@@ -6,6 +6,7 @@
                  
 #include "sysmond.h"
 #include "args.h"
+#include "version.h"
 
 static const char*         shortOptions = "c:p:d:u:s:h:";
 
@@ -38,7 +39,8 @@ char dbgFile[64];
 // Start functions
 
 void help( char* name )
-{  printf( "Syntax: %s {options} \nversion %s\n%s", name, version,
+{  
+   printf( "Syntax: %s {options} \nVersion %s\n%s", name, VERSION,
    "  -c, --config-file <filename>    -- config file location (default /etc/sysmond.conf)\n"
    "  -p, --pid-file    <filename>    -- pid file location    (default /run/sysmond.pid)\n"
    "  -d, --debug-file  <filname>     -- debug file location  (default /tmp/sysmond.dbg)\n"

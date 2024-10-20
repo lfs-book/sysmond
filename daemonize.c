@@ -75,6 +75,6 @@ void daemonize()
    close( STDOUT_FILENO );
    close( STDERR_FILENO );
 
-   nice( -1 );
-   set_affinity( 1 );
+   nice( -1 );         // Bump priority
+   set_affinity( 1 );  // Just run on CPU 1
 }
