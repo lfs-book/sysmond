@@ -110,7 +110,7 @@ int main( int argc, char* argv[])
   pthread_create( &thread_handle, NULL, udp_thread, NULL);
 
   // Loop for fetching data from the system
-  // Never exits.  Program terminates via SYSTERM signal.
+  // Never exits.  Program terminates via SIGTERM signal.
   
   while( true )
   {

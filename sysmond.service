@@ -1,0 +1,11 @@
+[Unit]
+Description=System Monitoring Daemon
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/sysmond
+PIDFile=/run/sysmond.pid
+
+[Install]
+WantedBy=multi-user.target
