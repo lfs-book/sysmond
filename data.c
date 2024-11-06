@@ -20,6 +20,8 @@ void get_data( char* out_string )
    char         buffer  [ 64 ];
    char         buffer2 [ 32 ];
    time_t       now;
+   struct tm*   info;
+   int          dst;
    static long  previousWork;
    static long  previousTotal;
    long         user;
@@ -80,7 +82,10 @@ void get_data( char* out_string )
    now    = time( NULL );
    ctime_r( &now, buffer );
    buffer[ 24 ] = 0;                        // Remove \n
-   sprintf( buffer2, "time:%s;", buffer );  
+   tzset();                                 // Get the time zone
+   info = gmtime( &now );
+   dst  = ( info->tm_isdst > 0 ) ? 1 : 0;
+   sprintf( buffer2, "time:%s %s;", buffer, tzname[ dst ] );  
    strcat( out_string, buffer2 );
 
    // Get the uptime
