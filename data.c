@@ -17,8 +17,8 @@ void get_data( char* out_string )
 
    static char  hostname[ 64 ];
 
-   char         buffer  [ 64 ];
-   char         buffer2 [ 32 ];
+   char         buffer  [ 48 ];
+   char         buffer2 [ 64 ];
    time_t       now;
    struct tm*   info;
    int          dst;
@@ -30,7 +30,7 @@ void get_data( char* out_string )
    long         idle;
    long         work;
    long         total;
-   long         MemTotal;
+   long         MemTotal = 0;  // Initialize to prevent a warning
    long         MemAvailable;
    double       percent;
 
@@ -101,7 +101,7 @@ void get_data( char* out_string )
 
    for ( int i = 0, j = 0; i < strlen(buffer); i++ )
    {
-      char buffer3[ 32 ];
+      char buffer3[ 80 ];
 
       if ( buffer[ i ] == ' ' ) j++;
       if ( j < 3 ) continue;
@@ -134,7 +134,7 @@ void get_data( char* out_string )
    else
       percent = (double) (work - previousWork) / ( total - previousTotal );
 
-   sprintf( buffer, "cpu%:%4.2f;", percent );  // Note the semicolon here
+   sprintf( buffer, "cpu%%:%4.2f;", percent );  // Note the semicolon here
    strcat ( out_string, buffer );
 
    previousWork  = work;
@@ -172,7 +172,7 @@ void get_data( char* out_string )
    }
 
    percent = ( (MemTotal - MemAvailable) * 100.0 ) / MemTotal;
-   sprintf( buffer, "mem%:%4.2f\n", percent );  // Note the new line here
+   sprintf( buffer, "mem%%:%4.2f\n", percent );  // Note the new line here
    strcat ( out_string, buffer );
 
    get_temps( out_string );

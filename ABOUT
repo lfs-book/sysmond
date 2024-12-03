@@ -45,7 +45,7 @@ It then sets itself up as a daemon by
      - Gets the pid of the forked process and writes it to /run/sysmond.pid
      - Terminates successfully
    - The forked process:
-     - Closes stdin, stdout, and stderro
+     - Closes stdin, stdout, and stderr
      - Sets up signal handlers
      - Creates a separate thread to handle udp input and output
      - Runs an infinite loop reading system data and sleeping

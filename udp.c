@@ -13,7 +13,6 @@ void* udp_thread( void* )
    int                udp_socket;
    char               data_in [ BUFFER_SIZE_IN  ]; 
    char               data_out[ BUFFER_SIZE_OUT ];  
-   socklen_t          data_len; 
    struct sockaddr_in serv_addr;
    struct sockaddr_in client_addr;
    socklen_t          socket_len = sizeof( struct sockaddr_in );
@@ -63,7 +62,7 @@ void* udp_thread( void* )
 
       if ( n < 0 )
       {
-         char t[40];
+         char t[64];
          sprintf( t, ": Error from recvfrom().  'n' returned %d\n", n ); 
          dbg( t );
       }
@@ -92,7 +91,7 @@ void* udp_thread( void* )
       data_out[ end ] = '\0';
 
       // Send data
-      ssize_t sent =
+      //ssize_t sent =
       sendto( udp_socket, 
               data_out, 
               strlen( data_out ) + 1, // Add trailing null

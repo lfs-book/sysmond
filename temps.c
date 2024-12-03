@@ -25,8 +25,8 @@ void get_temps( char* out_string )
    DIR*           subdir_fp;
    struct dirent* ent;     // /sys/class/hwmon entry
    struct dirent* sub_ent; // subdirectory entry
-   char           path     [ 128 ];
-   char           name     [ 128 ];
+   char           path     [ 288 ];   // Size takes into account
+   char           name     [ 288 ];   // max size of filename
    char           interface[ 128 ];
    char           buffer   [ 256 ];
 
@@ -97,13 +97,13 @@ continue2:
       for ( int i = 0; i < n; i++ )
       {
          // Read label if it exists
-         char label_name[ 32 ];
-         char label     [ 32 ];
+         char label_name[ 192 ];
+         char label     [  32 ];
          
          sprintf( label_name, "temp%s_label", tempEntries[ i ] ); 
 
          FILE* label_fp = fopen( label_name, "r" );
-         if ( label_fp != NULL )  
+         if ( label_fp != NULL )
          {
             fgets( label, sizeof(label), label_fp);
             fclose( label_fp );
@@ -115,8 +115,8 @@ continue2:
          label[ strcspn(label, "\n") ] = 0;
 
          // Now get the input temperature
-         char temperature     [ 32 ];
-         char temperature_name[ 32 ];
+         char temperature     [  32 ];
+         char temperature_name[ 192 ];
 
          sprintf( temperature_name, "temp%s_input", tempEntries[ i ] );
 
@@ -133,7 +133,6 @@ continue2:
 
          sprintf( tempString[ i ], ",%s:%d", label, degC );
 
-//printf( "0008 %s\n", tempString[ i ] );
          // Add to buffer string
          strcat( buffer, tempString[ i ] );
 

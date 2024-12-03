@@ -1,5 +1,5 @@
 To build sysmond (pronounced sys-mon-d), just run make.
-On most systemd the build time will be less than one second.
+On most systems the build time will be less than one second.
 
 If desired, copy the executable, sysmond, to the desired location
 such as /usr/sbin.
@@ -29,7 +29,7 @@ There are three associated files that are used.
 
 This file is optional, but if not found a warning will be
 written to the terminal.  The warning can be silenced
-with a sumple "sudo touch /etc/sysmond.conf".
+with a simple "sudo touch /etc/sysmond.conf".
 
 ------------
 /run/sysmond.pid
@@ -44,4 +44,4 @@ to the program:
   sudo kill -SIGUSR1 $(cat /run/sysmond.pid)
 
 This command will dump the current readings of the program
-status and tempeerature sensors.
+status and temperature sensors.

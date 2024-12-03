@@ -4,7 +4,7 @@ sysmond: $(objects)
 	gcc -o sysmond $(CFLAGS) -s $(objects)
 
 $(objects): %.o: %.c
-	gcc -c $(CFLAGS) -O2 $< -o $@
+	gcc -c $(CFLAGS) -O2 -Wall $< -o $@
 
 sysmond.o:   sysmond.c   sysmond.h 
 args.o:      args.c      sysmond.h args.h
