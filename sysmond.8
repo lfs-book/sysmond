@@ -1,0 +1,105 @@
+'\" t
+.\"     Title: sysmond
+.\"    Author: Bruce Dubbs
+.\" Generator: manual
+.\"      Date: 12/05/2024
+.\"    Manual: System Monitor Daemon
+.\"    Source: sysmond-3.0
+.\"  Language: English
+.\"
+.TH "sysmond" "8" "12/05/2024" "System Monitor Daemon"
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+sysmond \- monitor system values and respond to udp queries
+.SH "SYNOPSIS"
+.HP \w'\fBsysmond\fR\ 'u
+\fBsysmond\fR [\fIoptions\fR]
+.SH "DESCRIPTION"
+.PP
+The
+\fBsysmond\fR
+application monitors values in the /proc and /sys virtual file systems
+and returns those values to a client in response to a udp request\&. It is
+designed to work with the
+\fBsysmon3\fR
+client\&.
+.PP
+The application must be run as the 
+\fBroot\fR 
+user\&. No options are required, however any user can run the program 
+with the \fB\-\-help\fR option\&.
+.SH "OPTIONS"
+.PP
+The options which apply to the
+\fBsysmond\fR
+command are:
+.PP
+\fB\-c\fR, \fB\-\-config\-file\fR
+.RS 4
+Specify a non\-default configuration file (default /etc/sysmond.conf)\&.
+.RE
+.PP
+\fB\-p\fR, \fB\-\-pid\-file\fR
+.RS 4
+Specify a non\-default pid file (default /tmp/sysmond.dbg)\&.
+.RE
+.PP
+\fB\-u\fR, \fB\-\-udp\-port\fR
+.RS 4
+Specify a non\-default udp port (default 12686)\&.
+.RE
+.PP
+\fB\-s\fR, \fB\-\-scan\-time\fR
+.RS 4
+Specify a non\-default scan time (default 1 second)\&.
+.RE
+.PP
+\fB\-h\fR, \fB\-\-help\fR
+.RS 4
+Display help message and exit\&.
+.RE
+.SH "SIGNALS"
+.PP
+The application disconnects from the terminal and will only respond to signals\&.
+.RE
+.PP
+SIGTERM
+.RS 4
+Termination signal\&.
+.RE
+.PP
+SIGUSR1
+.RS 4
+Dump current readings to the debug file\&.
+.RE
+.RS 4
+Example: kill -SIGUSR1 $(cat /run/sysmond.pid)
+.RE
+.SH "FILES"
+.PP
+/etc/sysmond.conf
+.RS 4
+Default configuration file\&.
+.RE
+.PP
+/run/sysmond.pid
+.RS 4
+Default program identification (pid) file\&.
+.RE
+.PP
+/tmp/sysmond.dbg
+.RS 4
+Default file for data or debugging information\&.
+.RE
