@@ -16,7 +16,12 @@ temps.o:     temps.c     sysmond.h
 utils.o:     utils.c     utils.h
 
 install:
-	cp -v sysmond /usr/sbin
+	install -vm744 sysmond   /usr/sbin
+	install -vm644 sysmond.8 /usr/share/man/man8
+	install -vm644 sysmond.conf /etc/sysmond.conf.default
+ifeq (,$(wildcard /etc/sysmond.conf))
+	install -vm644 sysmond.conf /etc
+endif
 
 clean:
 	rm -f $(objects) sysmond
